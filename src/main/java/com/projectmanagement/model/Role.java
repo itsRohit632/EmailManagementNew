@@ -9,7 +9,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true) // ✅ Ensures no duplicate role names in DB
+    @Column(unique = true) //  Ensures no duplicate role names in DB
     @Enumerated(EnumType.STRING)
     private RoleName name;
 

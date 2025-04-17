@@ -30,12 +30,12 @@ public class AuthService {
     }
 
     public String register(UserDTO dto) {
-        // ✅ Check if user already exists
+        //  Check if user already exists
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("User already registered.");
         }
 
-        // ✅ Create User entity
+        //  Create User entity
         User user = new User();
         user.setFullName(dto.getFullName());
         user.setEmail(dto.getEmail());
@@ -44,27 +44,27 @@ public class AuthService {
         user.setPhoneNumber(dto.getPhoneNumber());
         user.setRegisteredAt(LocalDateTime.now());
 
-        // ✅ Fetch ROLE_USER from DB
+        //  Fetch ROLE_USER from DB
         Role roleUser = roleRepository.findByName(Role.RoleName.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("ROLE_USER not found in the database!"));
 
-        // ✅ Debug log for role
+        //  Debug log for role
         System.out.println("Assigned role: ID=" + roleUser.getId() + ", Name=" + roleUser.getName());
 
-        // ✅ Assign role to user
+        // Assign role to user
         user.getRoles().add(roleUser);
 
-        // ✅ Save user to DB
+        //  Save user to DB
         userRepository.save(user);
 
-        // ✅ Send welcome email to the user
+        //  Send welcome email to the user
         emailService.sendEmail(
                 user.getEmail(),
                 "Welcome to Email Management!",
                 "Hi " + user.getFullName() + ", your account has been successfully created!"
         );
 
-        // ✅ Send notification email to admin
+        //  Send notification email to admin
         emailService.sendEmail(
                 adminEmail,
                 "New User Registered",

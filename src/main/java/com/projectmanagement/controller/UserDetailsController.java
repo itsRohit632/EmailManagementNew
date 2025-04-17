@@ -28,7 +28,7 @@ public class UserDetailsController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate eadStartDate,
             @RequestParam Boolean hasPriorExperience,
             @RequestParam(required = false) String priorExperienceDetails,
-            @RequestParam String programmingLanguages,
+            @RequestParam String programmingLanguage,
             @RequestParam MultipartFile resumeFile,
             @RequestParam MultipartFile eadFile,
             @RequestParam MultipartFile idProofFile
@@ -37,7 +37,7 @@ public class UserDetailsController {
             service.saveExtraDetails(
                     email, referredBy, firstName, lastName, dob, eadType,
                     eadStartDate, hasPriorExperience, priorExperienceDetails,
-                    programmingLanguages, resumeFile, eadFile, idProofFile
+                    programmingLanguage, resumeFile, eadFile, idProofFile
             );
             return ResponseEntity.ok("Your details have been submitted successfully. One of our executives will contact you shortly.");
         } catch (Exception e) {

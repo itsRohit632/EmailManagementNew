@@ -1,20 +1,17 @@
 package com.projectmanagement.service;
 
+import com.projectmanagement.model.User;
+import com.projectmanagement.model.UserDetails;
+import com.projectmanagement.repo.UserDetailsRepository;
+import com.projectmanagement.repo.UserRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.Builder;
-
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.projectmanagement.model.User;
-import com.projectmanagement.model.UserDetails;
-import com.projectmanagement.repo.UserDetailsRepository;
-import com.projectmanagement.repo.UserRepository;
 
 @Service
 public class UserExtraDetailsService {
@@ -37,7 +34,7 @@ public class UserExtraDetailsService {
             LocalDate eadStartDate,
             Boolean hasPriorExperience,
             String priorExperienceDetails,
-            String programmingLanguages,
+            String programmingLanguage,
             MultipartFile resumeFile,
             MultipartFile eadFile,
             MultipartFile idProofFile
@@ -45,7 +42,7 @@ public class UserExtraDetailsService {
 
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
-            return "User with email " + email + " not found!";
+            return "User with email \"" + email + "\" not found!";
         }
 
         String uploadDir = "uploads/";
@@ -66,15 +63,14 @@ public class UserExtraDetailsService {
                 .eadStartDate(eadStartDate)
                 .hasPriorExperience(hasPriorExperience)
                 .priorExperienceDetails(priorExperienceDetails)
-                .programmingLanguages(programmingLanguages)
+                .programmingLanguage(programmingLanguage)
                 .resumeFileName(resumeFileName)
                 .eadFileName(eadFileName)
                 .idProofFileName(idFileName)
                 .build();
 
         userDetailsRepository.save(details);
-
-        return "User extra details saved successfully!";
+        return "User extra details saved successfully! One of our team members will reach out to you.";
     }
 
     private String saveFile(MultipartFile file, String dir) throws IOException {
