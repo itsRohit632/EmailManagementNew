@@ -1,58 +1,79 @@
 package com.projectmanagement.service;
 
-import com.projectmanagement.model.MockScore;
-import com.projectmanagement.repo.MockScoreRepository;
-import org.springframework.stereotype.Service;
 import com.projectmanagement.dto.MockScoreSummary;
+import com.projectmanagement.model.MockScore;
+import com.projectmanagement.model.ResumeScreening;
+import com.projectmanagement.model.User;
+import com.projectmanagement.repo.MockScoreRepository;
+import com.projectmanagement.repo.ResumeScreeningRepository;
+import com.projectmanagement.repo.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MockScoreService {
 
-    private final MockScoreRepository repo;
+    private final MockScoreRepository mockScoreRepo;
+    private final UserRepository userRepository;
+    private final ResumeScreeningRepository screeningRepository;
 
-    public MockScoreService(MockScoreRepository repo) {
-        this.repo = repo;
+    public MockScoreService(MockScoreRepository mockScoreRepo, UserRepository userRepository,
+                            ResumeScreeningRepository screeningRepository) {
+        this.mockScoreRepo = mockScoreRepo;
+        this.userRepository = userRepository;
+        this.screeningRepository = screeningRepository;
     }
 
-    // ✅ Save a mock score
+    // ✅ Save score and trigger evaluation
     public String saveScore(MockScore score) {
-        repo.save(score);
+        mockScoreRepo.save(score);
+        autoTransitionToResumeScreening(score.getEmail());
         return "Mock score submitted successfully.";
     }
 
-    // 📋 Get all mock scores by email
+    // ✅ Automatically move to Resume Screening if eligible
+    public void autoTransitionToResumeScreening(String email) {
+        List<MockScore> scores = mockScoreRepo.findByEmail(email);
+        if (scores.isEmpty()) return;
+
+        double avg = scores.stream().mapToInt(MockScore::getScore).average().orElse(0.0);
+        if (avg < 60) return;
+
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) return;
+
+        User user = userOpt.get();
+
+        // Prevent duplicate screening entry
+        if (screeningRepository.findByUser(user).isPresent()) return;
+
+        ResumeScreening screening = new ResumeScreening();
+        screening.setUser(user);
+        screening.setPassed(true);
+        screening.setFeedback("Auto-screened based on average mock score: " + avg);
+        screening.setTechnology("AutoAssigned");
+        screening.setScreenedBy("System");
+
+        screeningRepository.save(screening);
+    }
+
+    // ✅ Fetch all scores by email
     public List<MockScore> getAllScores(String email) {
-        return repo.findByEmail(email);
+        return mockScoreRepo.findByEmail(email);
     }
 
-    // 📊 Evaluate average score for eligibility
-    public String evaluate(String email) {
-        List<MockScore> scores = repo.findByEmail(email);
-
-        if (scores.isEmpty()) {
-            return "No scores available for evaluation.";
-        }
-
-        double average = scores.stream()
-                .mapToInt(MockScore::getScore) // ✅ No need for null check
-                .average()
-                .orElse(0.0);
-
-        return average >= 60
-                ? "✅ Eligible for Stage 4. Average score: " + average
-                : "❌ Not eligible yet. Average score: " + average;
+    // ✅ Fetch average score
+    public double getAverageScore(String email) {
+        List<MockScore> scores = mockScoreRepo.findByEmail(email);
+        return scores.stream().mapToInt(MockScore::getScore).average().orElse(0.0);
     }
-    
+
+    // ✅ Fetch score list + average as summary
     public MockScoreSummary getScoreSummary(String email) {
-        List<MockScore> scores = repo.findByEmail(email);
-
-        double average = scores.stream()
-            .mapToInt(MockScore::getScore)
-            .average()
-            .orElse(0.0);
-
+        List<MockScore> scores = mockScoreRepo.findByEmail(email);
+        double average = scores.stream().mapToInt(MockScore::getScore).average().orElse(0.0);
         return new MockScoreSummary(scores, average);
     }
 }
