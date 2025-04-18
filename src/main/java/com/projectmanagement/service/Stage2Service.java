@@ -39,6 +39,7 @@ public class Stage2Service {
     }
 
     public Stage2Details getStage2DetailsByEmail(String email) {
-        return stage2Repository.findByUserEmail(email);
+        return stage2Repository.findByUserEmail(email)
+                .orElseThrow(() -> new RuntimeException("No course assigned to user with email: " + email));
     }
 }
