@@ -51,10 +51,19 @@ public class MockScoreService {
 
         ResumeScreening screening = new ResumeScreening();
         screening.setUser(user);
-        screening.setPassed(true);
-        screening.setFeedback("Auto-screened based on average mock score: " + avg);
         screening.setTechnology("AutoAssigned");
         screening.setScreenedBy("System");
+        screening.setFeedback("Eligible for screening. Evaluated on communication, fluency, tech knowledge, and confidence.");
+      //*****************************//
+        screening.setIsPassed(true);
+      //*****************************//
+        //screening.setIsPassed(true);
+
+        // Auto-generate scores (you can modify this logic later if needed)
+        screening.setCommunication(7);
+        screening.setFluency(8);
+        screening.setTechnicalKnowledge(7);
+        screening.setConfidence(8);
 
         screeningRepository.save(screening);
     }

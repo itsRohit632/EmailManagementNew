@@ -1,6 +1,7 @@
 package com.projectmanagement.controller;
 
 import com.projectmanagement.dto.ResumeScreeningDTO;
+import com.projectmanagement.model.ResumeScreening;
 import com.projectmanagement.service.ResumeScreeningService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,25 +17,17 @@ public class ResumeScreeningController {
         this.service = service;
     }
 
-    // ✅ Submit resume screening decision
     @PostMapping("/submit")
-    public ResponseEntity<String> submitResumeScreening(@RequestBody ResumeScreeningDTO dto) {
-        try {
-            String result = service.submitScreening(dto);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-        }
+    public ResponseEntity<String> submitScreening(@RequestBody ResumeScreeningDTO dto) {
+        return ResponseEntity.ok(service.submitScreening(dto));
     }
 
-    // ✅ Check if the user has passed resume screening
-    @GetMapping("/check")
-    public ResponseEntity<String> checkScreening(@RequestParam String email) {
-        try {
-            String result = service.checkScreening(email);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+    @GetMapping("/result")
+    public ResponseEntity<?> getResult(@RequestParam String email) {
+        ResumeScreening screening = service.getResult(email);
+        if (screening == null) {
+            return ResponseEntity.status(404).body("No screening record found for: " + email);
         }
+        return ResponseEntity.ok(screening);
     }
 }
