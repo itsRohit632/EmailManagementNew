@@ -29,15 +29,15 @@ public class UserDetailsController {
             @RequestParam Boolean hasPriorExperience,
             @RequestParam(required = false) String priorExperienceDetails,
             @RequestParam String programmingLanguage,
-            @RequestParam MultipartFile resumeFile,
-            @RequestParam MultipartFile eadFile,
-            @RequestParam MultipartFile idProofFile
+            @RequestParam String fileType, // Add fileType parameter
+            @RequestParam MultipartFile uploadedFile // Handle a single file upload
     ) {
         try {
+            // Process the uploaded file based on fileType
             service.saveExtraDetails(
                     email, referredBy, firstName, lastName, dob, eadType,
                     eadStartDate, hasPriorExperience, priorExperienceDetails,
-                    programmingLanguage, resumeFile, eadFile, idProofFile
+                    programmingLanguage, uploadedFile, null, null
             );
             return ResponseEntity.ok("Your details have been submitted successfully. One of our executives will contact you shortly.");
         } catch (Exception e) {

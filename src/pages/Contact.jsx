@@ -25,6 +25,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import contactBg from '../assets/contact_bg.jpg';
 import contactUsImage from '../assets/contactus.jpg'; // Import the new image
+import axios from 'axios'; // Import axios for API calls
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -40,10 +41,35 @@ const Contact = () => {
         setShowForm(true); // Trigger the slide animation when the component mounts
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert(`Thank you, ${formData.name}! We'll contact you soon.`);
-        setFormData({ name: '', email: '', subject: '', message: '' });
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('email', formData.email);
+        formDataToSend.append('referredBy', formData.referredBy);
+        formDataToSend.append('firstName', formData.firstName);
+        formDataToSend.append('lastName', formData.lastName);
+        formDataToSend.append('dob', formData.dob);
+        formDataToSend.append('eadType', formData.eadType);
+        formDataToSend.append('eadStartDate', formData.eadStartDate);
+        formDataToSend.append('hasPriorExperience', formData.hasPriorExperience);
+        formDataToSend.append('priorExperienceDetails', formData.priorExperienceDetails || '');
+        formDataToSend.append('programmingLanguage', formData.programmingLanguage);
+        formDataToSend.append('fileType', formData.fileType);
+        formDataToSend.append('uploadedFile', formData.uploadedFile);
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/user-details/submit', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true, // Include credentials in the request
+            });
+            alert(response.data); // Show success message
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Failed to submit the form. Please try again.');
+        }
     };
 
     const handleChange = (e) => {
@@ -75,10 +101,23 @@ const Contact = () => {
                 }}
             >
                 <Container>
-                    <Typography variant="h4" component="h3" gutterBottom sx={{ fontWeight: 700, color: 'rgb(105, 30, 30)', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)' }}>
+                    <Typography
+                        variant="h4"
+                        component="h3"
+                        gutterBottom
+                        sx={{
+                            fontWeight: 700,
+                            color: 'rgb(56, 30, 105)',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
+                            backgroundColor: 'rgba(91, 173, 194, 0.8)', // Add background color
+                            padding: '10px 20px', // Add padding for spacing
+                            borderRadius: '8px', // Add rounded corners
+                            display: 'inline-block' // Ensure the background wraps tightly around the text
+                        }}
+                    >
                         Contact Us
                     </Typography>
-                    <Typography variant="body1" sx={{ maxWidth: '600px', margin: '0 auto' }}>
+                    <Typography variant="body1" sx={{ maxWidth: '600px', margin: '0 auto', color: 'rgb(78, 41, 121)' }}>
                         Have questions or want to work with us? Fill out the form below or reach out to us directly.
                     </Typography>
                 </Container>
@@ -113,14 +152,14 @@ const Contact = () => {
                                 elevation={4}
                                 sx={{
                                     p: 4,
-                                    background: 'rgba(197, 192, 169, 0.5)',
+                                    background: 'rgba(48, 121, 134, 0.43)',
                                     borderRadius: '16px',
                                     boxShadow: '0 8px 16px rgb(105, 30, 30)',
                                     maxWidth: '600px',
                                     margin: '0 auto'
                                 }}
                             >
-                                <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 600, color: 'rgb(105, 30, 30)', textAlign: 'center'}}>
+                                <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 600, color: 'rgb(105, 30, 30)', textAlign: 'center' }}>
                                     Enquire Now
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary" paragraph>
@@ -130,9 +169,9 @@ const Contact = () => {
                                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
                                     <TextField
                                         fullWidth
-                                        label="Who referred/How did you know about me"
-                                        name="referral"
-                                        value={formData.referral || ''}
+                                        label="Who referred you?"
+                                        name="referredBy"
+                                        value={formData.referredBy || ''}
                                         onChange={handleChange}
                                         margin="normal"
                                         required
@@ -216,16 +255,6 @@ const Contact = () => {
                                         required
                                     />
                                     <TextField
-                                        fullWidth
-                                        label="Any Prior Experience"
-                                        name="priorExperience"
-                                        value={formData.priorExperience || ''}
-                                        onChange={handleChange}
-                                        margin="normal"
-                                        multiline
-                                        rows={2}
-                                    />
-                                    <TextField
                                         select
                                         fullWidth
                                         label="Programming Language of Interest"
@@ -239,6 +268,7 @@ const Contact = () => {
                                         InputLabelProps={{
                                             shrink: true, // Ensures the label stays above the dropdown
                                         }}
+                                        required
                                     >
                                         <option value="" disabled>
                                             Select an option
@@ -249,12 +279,67 @@ const Contact = () => {
                                         <option value="Python Full Stack Developer">Python Full Stack Developer</option>
                                         <option value="Business Analyst">Business Analyst</option>
                                     </TextField>
-
-                                    {/* File Upload Field */}
-                                    <Typography variant="body2" color="text.secondary" sx={{ mt: 2}}>
-                                        Attach your resume, EAD, and any ID (DL or ID) when submitting.
+                                    <TextField
+                                        fullWidth
+                                        label="Do you have prior experience?"
+                                        name="hasPriorExperience"
+                                        select
+                                        value={formData.hasPriorExperience || ''}
+                                        onChange={handleChange}
+                                        margin="normal"
+                                        SelectProps={{
+                                            native: true,
+                                        }}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        required
+                                    >
+                                        <option value="" disabled>
+                                            Select an option
+                                        </option>
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </TextField>
+                                    {formData.hasPriorExperience === 'true' && (
+                                        <TextField
+                                            fullWidth
+                                            label="Details of Prior Experience (if any)"
+                                            name="priorExperienceDetails"
+                                            value={formData.priorExperienceDetails || ''}
+                                            onChange={handleChange}
+                                            margin="normal"
+                                            multiline
+                                            rows={2}
+                                        />
+                                    )}
+                                    <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                                        Attach your file below (Resume, EAD Card, or ID Proof):
                                     </Typography>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                                        <TextField
+                                            select
+                                            fullWidth
+                                            label="File Type"
+                                            name="fileType"
+                                            value={formData.fileType || ''}
+                                            onChange={handleChange}
+                                            margin="normal"
+                                            SelectProps={{
+                                                native: true,
+                                            }}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            required
+                                        >
+                                            <option value="" disabled>
+                                                Select File Type
+                                            </option>
+                                            <option value="Resume">Resume</option>
+                                            <option value="EAD Card">EAD Card</option>
+                                            <option value="ID Proof">ID Proof</option>
+                                        </TextField>
                                         <Button
                                             variant="outlined"
                                             component="label"
@@ -262,33 +347,36 @@ const Contact = () => {
                                             Upload File
                                             <input
                                                 type="file"
-                                                name="attachment"
+                                                name="uploadedFile"
                                                 accept=".pdf,.doc,.docx"
                                                 hidden
                                                 onChange={(e) => {
                                                     const file = e.target.files[0];
-                                                    if (file) {
-                                                        console.log(`File selected: ${file.name}`);
-                                                    }
+                                                    setFormData(prev => ({ ...prev, uploadedFile: file }));
                                                 }}
                                             />
                                         </Button>
-
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            size="large"
-                                            sx={{
-                                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                                color: 'white',
-                                                '&:hover': {
-                                                    background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)'
-                                                }
-                                            }}
-                                        >
-                                            SEND MESSAGE
-                                        </Button>
+                                        {formData.uploadedFile && (
+                                            <Typography variant="body2" color="text.secondary">
+                                                Selected File: {formData.uploadedFile.name}
+                                            </Typography>
+                                        )}
                                     </Box>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        size="large"
+                                        sx={{
+                                            mt: 3,
+                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            color: 'white',
+                                            '&:hover': {
+                                                background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)'
+                                            }
+                                        }}
+                                    >
+                                        Submit
+                                    </Button>
                                 </Box>
                             </Paper>
                         </Slide>
@@ -301,6 +389,7 @@ const Contact = () => {
                             py: 6,
                             background: 'linear-gradient(135deg,rgba(112, 180, 185, 0.47) 0%,rgba(102, 138, 187, 0.42) 100%)',
                             color: '#333',
+                            boxShadow: '0 8px 16px rgb(105, 30, 30)',
                             width: '100vw', // Use viewport width
                             marginLeft: 'calc(-50vw + 50%)', // Center the element when using 100vw
                             borderRadius: 0,
@@ -335,7 +424,7 @@ const Contact = () => {
                                 <Box
                                     sx={{
                                         p: 4,
-                                        background: 'white',
+                                        background: 'rgba(88, 113, 117, 0.9)', // Slightly transparent white background
                                         borderRadius: '8px', // Add slight rounding for aesthetics
                                         boxShadow: '0 4px 12px rgba(75, 12, 12, 0.75)', // Add subtle shadow for better visibility
                                         display: 'flex',
