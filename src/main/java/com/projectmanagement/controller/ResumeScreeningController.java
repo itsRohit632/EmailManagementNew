@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/stage4")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")  // Allow requests from frontend
 public class ResumeScreeningController {
 
     private final ResumeScreeningService service;
@@ -17,17 +17,28 @@ public class ResumeScreeningController {
         this.service = service;
     }
 
+    // ✅ POST endpoint to submit resume screening details
     @PostMapping("/submit")
     public ResponseEntity<String> submitScreening(@RequestBody ResumeScreeningDTO dto) {
-        return ResponseEntity.ok(service.submitScreening(dto));
+        try {
+            String result = service.submitScreening(dto);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("❌ Error during submission: " + e.getMessage());
+        }
     }
 
+    // ✅ GET endpoint to fetch screening result by email
     @GetMapping("/result")
     public ResponseEntity<?> getResult(@RequestParam String email) {
-        ResumeScreening screening = service.getResult(email);
-        if (screening == null) {
-            return ResponseEntity.status(404).body("No screening record found for: " + email);
+        try {
+            ResumeScreening screening = service.getResult(email);
+            if (screening == null) {
+                return ResponseEntity.status(404).body("No screening record found for: " + email);
+            }
+            return ResponseEntity.ok(screening);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("❌ Error retrieving result: " + e.getMessage());
         }
-        return ResponseEntity.ok(screening);
     }
 }
