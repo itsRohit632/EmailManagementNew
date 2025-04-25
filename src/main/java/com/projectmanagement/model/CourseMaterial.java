@@ -2,6 +2,8 @@ package com.projectmanagement.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class CourseMaterial {
 
@@ -9,36 +11,29 @@ public class CourseMaterial {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String courseName;      // e.g. "Java Full Stack"
-    private String title;           // e.g. "Spring Boot Introduction"
-    private String filePath;        // e.g. "uploads/materials/java_intro.pdf"
+    private String courseName;
+    private String title;
+    private String filePath;
+    private LocalDateTime uploadTime;
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
 
-    public String getCourseName() {
-        return courseName;
-    }
+    public void setId(Long id) { this.id = id; }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
+    public String getCourseName() { return courseName; }
 
-    public String getTitle() {
-        return title;
-    }
+    public void setCourseName(String courseName) { this.courseName = courseName; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public String getTitle() { return title; }
 
-    public String getFilePath() {
-        return filePath;
-    }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
+    public String getFilePath() { return filePath; }
+
+    public void setFilePath(String filePath) { this.filePath = filePath; }
+
+    public LocalDateTime getUploadTime() { return uploadTime; }
+
+    public void setUploadTime(LocalDateTime uploadTime) { this.uploadTime = uploadTime; }
 }

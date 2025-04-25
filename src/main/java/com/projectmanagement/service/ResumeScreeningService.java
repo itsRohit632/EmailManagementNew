@@ -50,7 +50,7 @@ public class ResumeScreeningService {
         boolean passed = avg >= 6.0;
         
         //*****************************//
-        screening.setIsPassed(passed);
+        screening.setPassed(passed);
       //*****************************//
 
         repository.save(screening);

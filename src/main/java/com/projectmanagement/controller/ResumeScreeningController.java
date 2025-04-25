@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/stage4")
-@CrossOrigin(origins = "*")  // Allow requests from frontend
+@CrossOrigin(origins = "*")
 public class ResumeScreeningController {
 
     private final ResumeScreeningService service;
@@ -17,28 +17,29 @@ public class ResumeScreeningController {
         this.service = service;
     }
 
-    // ✅ POST endpoint to submit resume screening details
+    // ✅ Submit screening scores
     @PostMapping("/submit")
     public ResponseEntity<String> submitScreening(@RequestBody ResumeScreeningDTO dto) {
-        try {
-            String result = service.submitScreening(dto);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("❌ Error during submission: " + e.getMessage());
-        }
+        return ResponseEntity.ok(service.submitScreening(dto));
     }
 
-    // ✅ GET endpoint to fetch screening result by email
+    // ✅ Get screening result by email
     @GetMapping("/result")
     public ResponseEntity<?> getResult(@RequestParam String email) {
-        try {
-            ResumeScreening screening = service.getResult(email);
-            if (screening == null) {
-                return ResponseEntity.status(404).body("No screening record found for: " + email);
-            }
-            return ResponseEntity.ok(screening);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("❌ Error retrieving result: " + e.getMessage());
+        ResumeScreening screening = service.getResult(email);
+        if (screening == null) {
+            return ResponseEntity.status(404).body("No screening record found for: " + email);
         }
+        return ResponseEntity.ok(screening);
+    }
+
+    // ✅ Check if a screening exists for the given email (for Stage 6 trigger)
+    @GetMapping("/check")
+    public ResponseEntity<?> checkResumeScreening(@RequestParam String email) {
+        ResumeScreening screening = service.getResult(email);
+        if (screening == null) {
+            return ResponseEntity.status(404).body("No resume screening record found for: " + email);
+        }
+        return ResponseEntity.ok(screening);
     }
 }

@@ -55,7 +55,7 @@ public class MockScoreService {
         screening.setScreenedBy("System");
         screening.setFeedback("Eligible for screening. Evaluated on communication, fluency, tech knowledge, and confidence.");
       //*****************************//
-        screening.setIsPassed(true);
+        screening.setPassed(true);
       //*****************************//
         //screening.setIsPassed(true);
 

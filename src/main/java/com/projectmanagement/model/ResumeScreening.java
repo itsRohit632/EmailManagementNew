@@ -15,41 +15,93 @@ public class ResumeScreening {
     private String technology;
     private String screenedBy;
     private String feedback;
-    private Boolean isPassed;
 
-    private Integer communication;
-    private Integer fluency;
-    private Integer technicalKnowledge;
-    private Integer confidence;
+    private int communication;
+    private int fluency;
+    private int technicalKnowledge;
+    private int confidence;
 
-    // Getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private boolean passed; // Use 'passed' instead of 'isPassed'
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    // ====== Getters and Setters ======
 
-    public String getTechnology() { return technology; }
-    public void setTechnology(String technology) { this.technology = technology; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getScreenedBy() { return screenedBy; }
-    public void setScreenedBy(String screenedBy) { this.screenedBy = screenedBy; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getFeedback() { return feedback; }
-    public void setFeedback(String feedback) { this.feedback = feedback; }
+    public User getUser() {
+        return user;
+    }
 
-    public Boolean getIsPassed() { return isPassed; }
-    public void setIsPassed(Boolean isPassed) { this.isPassed = isPassed; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public Integer getCommunication() { return communication; }
-    public void setCommunication(Integer communication) { this.communication = communication; }
+    public String getTechnology() {
+        return technology;
+    }
 
-    public Integer getFluency() { return fluency; }
-    public void setFluency(Integer fluency) { this.fluency = fluency; }
+    public void setTechnology(String technology) {
+        this.technology = technology;
+    }
 
-    public Integer getTechnicalKnowledge() { return technicalKnowledge; }
-    public void setTechnicalKnowledge(Integer technicalKnowledge) { this.technicalKnowledge = technicalKnowledge; }
+    public String getScreenedBy() {
+        return screenedBy;
+    }
 
-    public Integer getConfidence() { return confidence; }
-    public void setConfidence(Integer confidence) { this.confidence = confidence; }
+    public void setScreenedBy(String screenedBy) {
+        this.screenedBy = screenedBy;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+
+    public int getCommunication() {
+        return communication;
+    }
+
+    public void setCommunication(int communication) {
+        this.communication = communication;
+    }
+
+    public int getFluency() {
+        return fluency;
+    }
+
+    public void setFluency(int fluency) {
+        this.fluency = fluency;
+    }
+
+    public int getTechnicalKnowledge() {
+        return technicalKnowledge;
+    }
+
+    public void setTechnicalKnowledge(int technicalKnowledge) {
+        this.technicalKnowledge = technicalKnowledge;
+    }
+
+    public int getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(int confidence) {
+        this.confidence = confidence;
+    }
+
+    public boolean isPassed() {
+        return passed;
+    }
+
+    public void setPassed(boolean passed) {
+        this.passed = passed;
+    }
 }

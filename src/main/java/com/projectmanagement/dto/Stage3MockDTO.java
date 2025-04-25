@@ -1,31 +1,32 @@
 package com.projectmanagement.dto;
 
-import java.time.LocalDate;
+import com.projectmanagement.model.MockScore;
+import java.util.List;
 
 public class Stage3MockDTO {
-    private String email;
-    private String testName;
-    private Integer score;
-    private LocalDate testDate;
-    private String status;
+    private List<MockScore> scores;
+    private double average;
 
-    public String getEmail() {
-        return email;
+    public Stage3MockDTO() {}
+
+    public Stage3MockDTO(List<MockScore> scores, double average) {
+        this.scores = scores;
+        this.average = average;
     }
 
-    public String getTestName() {
-        return testName;
+    public List<MockScore> getScores() {
+        return scores;
     }
 
-    public Integer getScore() {
-        return score;
+    public void setScores(List<MockScore> scores) {
+        this.scores = scores;
     }
 
-    public LocalDate getTestDate() {
-        return testDate;
+    public double getAverage() {
+        return average;
     }
 
-    public String getStatus() {
-        return status;
+    public void setAverage(double average) {
+        this.average = average;
     }
 }
