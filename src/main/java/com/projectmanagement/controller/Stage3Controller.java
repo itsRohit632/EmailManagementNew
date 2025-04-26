@@ -1,4 +1,3 @@
-// src/main/java/com/projectmanagement/controller/Stage3Controller.java
 package com.projectmanagement.controller;
 
 import com.projectmanagement.dto.Stage3MockDTO;
@@ -20,35 +19,45 @@ public class Stage3Controller {
         this.stage3Service = stage3Service;
     }
 
-    // 1) Submit a mock test record
+    /**
+     * Submit a mock test record for the given email.
+     * Call:
+     *   POST /api/stage3/add?email=you@example.com
+     * Body JSON:
+     *   {
+     *     "testName": "Java Mock 3",
+     *     "score": 79,
+     *     "status": "PASSED"
+     *   }
+     */
     @PostMapping({"/add", "/submit-score"})
-    public ResponseEntity<String> addMockTest(@RequestBody Stage3MockTest test) {
-        return ResponseEntity.ok(stage3Service.addMockTest(test));
+    public ResponseEntity<String> addMockTest(
+            @RequestParam("email") String email,
+            @RequestBody Stage3MockTest test) {
+
+        String msg = stage3Service.addMockTest(test, email);
+        return ResponseEntity.ok(msg);
     }
 
-    // 2a) Get all tests by query parameter
-    //    GET /api/stage3/tests?email=you@example.com
+    /** Get all tests for a user by email (query param) */
     @GetMapping("/tests")
     public ResponseEntity<List<Stage3MockTest>> getTestsByParam(@RequestParam String email) {
         return ResponseEntity.ok(stage3Service.getMockTests(email));
     }
 
-    // 2b) Get all tests by path variable
-    //    GET /api/stage3/tests/{email}
+    /** Get all tests for a user by email (path variable) */
     @GetMapping("/tests/{email}")
     public ResponseEntity<List<Stage3MockTest>> getTestsByPath(@PathVariable String email) {
         return ResponseEntity.ok(stage3Service.getMockTests(email));
     }
 
-    // 3a) Get summary by query parameter
-    //    GET /api/stage3/summary?email=you@example.com
+    /** Get summary for a user by email (query param) */
     @GetMapping("/summary")
     public ResponseEntity<Stage3MockDTO> getSummaryByParam(@RequestParam String email) {
         return ResponseEntity.ok(stage3Service.getMockSummary(email));
     }
 
-    // 3b) Get summary by path variable
-    //    GET /api/stage3/summary/{email}
+    /** Get summary for a user by email (path variable) */
     @GetMapping("/summary/{email}")
     public ResponseEntity<Stage3MockDTO> getSummaryByPath(@PathVariable String email) {
         return ResponseEntity.ok(stage3Service.getMockSummary(email));
