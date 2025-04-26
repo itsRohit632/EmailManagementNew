@@ -22,9 +22,9 @@ public class User {
     private LocalDateTime registeredAt;
     private LocalDateTime lastLogin;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL) // ✅ Cascade added here
     @JoinTable(
-        name = "user_roles", // custom join table name
+        name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
@@ -53,7 +53,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email.toLowerCase(); // normalize email
+        this.email = email.toLowerCase(); // Normalize email
     }
 
     public String getPassword() {
@@ -104,4 +104,3 @@ public class User {
         this.roles = roles;
     }
 }
-

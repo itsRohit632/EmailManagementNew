@@ -1,25 +1,26 @@
 package com.projectmanagement.dto;
 
-import com.projectmanagement.model.MockScore;
+import com.projectmanagement.model.Stage3MockTest;
 import java.util.List;
 
 public class Stage3MockDTO {
-    private List<MockScore> scores;
+    private List<Stage3MockTest> tests;
     private double average;
 
-    public Stage3MockDTO() {}
+    public Stage3MockDTO() {
+    }
 
-    public Stage3MockDTO(List<MockScore> scores, double average) {
-        this.scores = scores;
+    public Stage3MockDTO(List<Stage3MockTest> tests, double average) {
+        this.tests = tests;
         this.average = average;
     }
 
-    public List<MockScore> getScores() {
-        return scores;
+    public List<Stage3MockTest> getTests() {
+        return tests;
     }
 
-    public void setScores(List<MockScore> scores) {
-        this.scores = scores;
+    public void setTests(List<Stage3MockTest> tests) {
+        this.tests = tests;
     }
 
     public double getAverage() {
