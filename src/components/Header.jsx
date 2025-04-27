@@ -9,7 +9,7 @@ const Header = () => {
             position="static"
             sx={{
                 boxShadow: 'none',
-                background: 'linear-gradient(90deg,rgb(204, 194, 147) 0%,rgb(206, 154, 115) 100%)', // Gradient color
+                background: 'linear-gradient(90deg,rgb(101, 81, 150) 0%,rgb(51, 147, 160) 100%)', // Gradient color
             }}
         >
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -65,7 +65,7 @@ const Header = () => {
                     </Button>
                     <Button
                         component={RouterLink}
-                        to="/register"
+                        to="/admin-login"
                         sx={{
                             color: 'rgba(122, 9, 9, 0.62)', // Adjust text color for better visibility
                             textTransform: 'none',
@@ -82,7 +82,7 @@ const Header = () => {
                             },
                         }}
                     >
-                        Register
+                        Admin Login
                     </Button>
                 </Box>
             </Toolbar>
